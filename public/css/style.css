@@ -19,6 +19,7 @@ body{
   top:0;
   width: 100%;
   height: var(--header-height);
+  background-color: #fff;
 }
 
 .header .inner-logo img{
@@ -60,6 +61,7 @@ body{
 /* box-head */
 .box-head{
   margin-bottom: 30px;
+  
 }
 .box-head .inner-title{
   margin-bottom: 0;
