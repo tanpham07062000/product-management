@@ -8,6 +8,9 @@ const port = process.env.PORT;
 app.set("views", "./views");
 app.set("view engine", "pug");
 
+//Nhúng file tĩnh
+app.use(express.static("public"));
+
 //Routes
 route(app);
 app.listen(port, () => {
