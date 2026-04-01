@@ -12,6 +12,10 @@ const port = process.env.PORT;
 app.set("views", "./views");
 app.set("view engine", "pug");
 
+// App Locals Variables
+const systemConfig = require("./config/system")
+app.locals.prefixAdmin = systemConfig.prefixAdmin;
+
 //Nhúng file tĩnh
 app.use(express.static("public"));
 
