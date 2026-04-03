@@ -17,3 +17,22 @@ if (buttonStatus.length > 0) {
   });
 }
 // End Button Status
+
+// Form Search
+const formSearch = document.querySelector("#form-search");
+if (formSearch) {
+  formSearch.addEventListener("submit", (e)=>{
+    let url = new URL(window.location.href);
+    const keyword=e.target.elements.keyword.value;
+    e.preventDefault();
+    // console.log(e.target.elements.keyword.value);
+    if (keyword) {
+        url.searchParams.set("keyword", keyword);
+      } else {
+        url.searchParams.delete("keyword");
+      }
+      window.location.href = url.href;
+      // console.log(url);
+  })
+}
+// End Form Search
