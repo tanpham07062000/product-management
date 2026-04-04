@@ -19,8 +19,6 @@ module.exports.index = async (req, res) => {
   if (objectSearch.regex) {
     find.title = objectSearch.regex;
   }
-
-
   
   // Pagination
   const countProducts = await Product.countDocuments(find);
@@ -48,3 +46,11 @@ module.exports.index = async (req, res) => {
     pagination: objectPagination,
   });
 };
+// [GET] /admin/products//change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+  
+  const status = req.params.status;
+  const id = req.params.id;
+  await Product.updateOne({_id: id}, {status: status});
+  res.redirect(req.get('Referrer') || '/');
+}
