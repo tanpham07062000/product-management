@@ -11,6 +11,7 @@ const route = require("./routes/client/index.route");
 const routeAdmin = require("./routes/admin/index.route");
 const app = express();
 const port = process.env.PORT;
+
 app.use(methodOverride('_method'));
 
 // parse application/x-www-form-urlencoded
