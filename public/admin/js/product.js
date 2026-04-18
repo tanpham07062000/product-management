@@ -54,52 +54,69 @@ if (checkboxMulti) {
 }
 // End check box
 
-
 // Form Change Multi
 const formChangeMulti = document.querySelector("[form-change-multi]");
-if(formChangeMulti){
-  formChangeMulti.addEventListener("submit",(e)=>{
+if (formChangeMulti) {
+  formChangeMulti.addEventListener("submit", (e) => {
     e.preventDefault();
     const checkboxMulti = document.querySelector("[checkbox-multi]");
     const inputsChecked = checkboxMulti.querySelectorAll(
-        "input[name='id']:checked",
-      );
+      "input[name='id']:checked",
+    );
 
-    if(inputsChecked.length > 0){
+    const typeChange = e.target.elements.type.value;
+    if (typeChange == "delete-all") {
+      const isConfirm = confirm(
+        "Bạn có chắc chắn muốn xóa sản phẩm này không?",
+      );
+      if (isConfirm == false) {
+        return;
+      }
+    }
+
+    if (inputsChecked.length > 0) {
       let ids = [];
       const inputIds = formChangeMulti.querySelector("input[name='ids']");
-      inputsChecked.forEach(input=>{
-        const id=input.value;
-        ids.push(id);
+      inputsChecked.forEach((input) => {
+        const id = input.value;
+        if (typeChange == "change-position") {
+          const position = input
+            .closest("tr")
+            .querySelector('input[name="position"]').value;
+          ids.push(`${id}-${position}`);
+        } else {
+          ids.push(id);
+        }
       });
-      inputIds.value=ids.join(",");
+      inputIds.value = ids.join(",");
       formChangeMulti.submit();
-    }else{
+    } else {
       alert("Vui long chon it nhat 1 ban ghi!");
     }
-  })
+  });
 }
 
 //End Form Change Multi
 
 // Delete Item
 const buttonsDelete = document.querySelectorAll("[button-delete]");
-if(buttonsDelete.length > 0 ){
+if (buttonsDelete.length > 0) {
   const formDeleteItem = document.querySelector("#form-delete-item");
-  const path= formDeleteItem.getAttribute("data-path");
-  buttonsDelete.forEach(button => {
-    button.addEventListener("click",()=>{
-      const isConfirm = confirm("Bạn các chắc chắn muốn xóa sản phẩm này không?");
-      if(isConfirm){
+  const path = formDeleteItem.getAttribute("data-path");
+  buttonsDelete.forEach((button) => {
+    button.addEventListener("click", () => {
+      const isConfirm = confirm(
+        "Bạn các chắc chắn muốn xóa sản phẩm này không?",
+      );
+      if (isConfirm) {
         const id = button.getAttribute("data-id");
-        
+
         const action = `${path}/${id}?_method=DELETE`;
-        
+
         formDeleteItem.action = action;
         formDeleteItem.submit();
       }
     });
-
-  })
+  });
 }
 // End Delete Item

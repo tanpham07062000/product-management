@@ -34,6 +34,7 @@ module.exports.index = async (req, res) => {
   // End Pagination
 
   const products = await Product.find(find)
+    .sort({position: "desc"})
     .limit(objectPagination.limitItem)
     .skip(objectPagination.skip);
 
@@ -59,24 +60,35 @@ module.exports.changeMulti = async (req, res) => {
   const ids = req.body.ids.split(",");
   switch (type) {
     case "active":
-      await Product.updateMany(
-        { _id: { $in: ids } },
-        { status:"active"}
-      );
+      await Product.updateMany({ _id: { $in: ids } }, { status: "active" });
       break;
     case "inactive":
+      await Product.updateMany({ _id: { $in: ids } }, { status: "inactive" });
+      break;
+    case "delete-all":
       await Product.updateMany(
         { _id: { $in: ids } },
-        { status:"inactive"}
+        { deleted: true, deletedAt: new Date() },
       );
+      break;
+    case "change-position":
+      for (const item of ids) {
+        let [id, position] = item.split("-");
+        position = parseInt(position);
+        await Product.updateOne({ _id: id }, { position: position });
+      }
+      // await Product.updateMany(
+      //   { _id: { $in: ids } },
+      //   { deleted: true, deletedAt: new Date() },
+      // );
       break;
     default:
       break;
-  };
+  }
   // const status = req.params.status;
   // const id = req.params.id;
   // await Product.updateOne({_id: id}, {status: status});
-  res.redirect(req.get('Referrer') || '/');
+  res.redirect(req.get("Referrer") || "/");
 };
 
 // [DELETE] /admin/products/delete/:id
@@ -86,9 +98,12 @@ module.exports.deleteItem = async (req, res) => {
   // xoa vinh vien
   // await Product.deleteOne({ _id: id });
   // Xoa mem
-  await Product.updateOne({_id: id}, {
-    deleted: true,
-    deletedAt: new Date(),
-  });
+  await Product.updateOne(
+    { _id: id },
+    {
+      deleted: true,
+      deletedAt: new Date(),
+    },
+  );
   res.redirect(req.get("Referrer") || "/");
 };
