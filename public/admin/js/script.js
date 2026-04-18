@@ -21,31 +21,31 @@ if (buttonStatus.length > 0) {
 // Form Search
 const formSearch = document.querySelector("#form-search");
 if (formSearch) {
-  formSearch.addEventListener("submit", (e)=>{
+  formSearch.addEventListener("submit", (e) => {
     let url = new URL(window.location.href);
-    const keyword=e.target.elements.keyword.value;
+    const keyword = e.target.elements.keyword.value;
     e.preventDefault();
     // console.log(e.target.elements.keyword.value);
     if (keyword) {
-        url.searchParams.set("keyword", keyword);
-      } else {
-        url.searchParams.delete("keyword");
-      }
-      window.location.href = url.href;
-      // console.log(url);
-  })
+      url.searchParams.set("keyword", keyword);
+    } else {
+      url.searchParams.delete("keyword");
+    }
+    window.location.href = url.href;
+    // console.log(url);
+  });
 }
 // End Form Search
 
 // Pagination
-const buttonsPagination =  document.querySelectorAll("[button-pagination]");
-if(buttonsPagination){
+const buttonsPagination = document.querySelectorAll("[button-pagination]");
+if (buttonsPagination) {
   let url = new URL(window.location.href);
 
-  buttonsPagination.forEach(button => {
+  buttonsPagination.forEach((button) => {
     button.addEventListener("click", () => {
       const page = button.getAttribute("button-pagination");
-      
+
       url.searchParams.set("page", page);
       window.location.href = url.href;
     });
@@ -54,4 +54,16 @@ if(buttonsPagination){
 
 // End Pagination
 
-//
+//Show Alert
+const showAlert = document.querySelector("[show-alert]");
+if (showAlert) {
+  const time = parseInt(showAlert.getAttribute("data-time"));
+  const closeAlert = showAlert.querySelector("[close-alert]");
+  setTimeout(() => {
+    showAlert.classList.add("alert-hidden");
+  }, time);
+  closeAlert.addEventListener("click", () => {
+    showAlert.classList.add("alert-hidden");
+  });
+}
+//End Show Alert
