@@ -1,4 +1,5 @@
 const express = require("express");
+const app = express();
 var methodOverride = require('method-override');
 const bodyParser = require('body-parser');
 var flash = require('express-flash');
@@ -17,20 +18,14 @@ require('dotenv').config();
 
 
 //kết nối MongoDB
-app.use(async (req, res, next) => {
-  try {
-    await database.connect();
-    next();
-  } catch (err) {
-    console.log(" DB ERROR:", err.message);
-    res.status(500).send("Database connection error");
-  }
-});
+database.connect()
+  .then(() => console.log("DB connected"))
+  .catch(err => console.log(err));
 
 
 
-const app = express();
-const port = process.env.PORT;
+
+const port = process.env.PORT || 3000;
 
 app.use(methodOverride('_method'));
 
@@ -41,7 +36,11 @@ app.set("view engine", "pug");
 
 //flash
 app.use(cookieParser('keyboardtan'));
-app.use(session({ cookie: { maxAge: 60000 }}));
+app.use(session({
+  secret: 'keyboardtan',  
+  resave: false,
+  saveUninitialized: true
+}));
 app.use(flash());
 
 // App Locals Variables
@@ -57,4 +56,5 @@ routeAdmin(app);
 // app.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`);
 // });
+app.set('trust proxy', 1);
 module.exports = app;
