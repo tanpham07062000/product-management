@@ -17,7 +17,6 @@ require('dotenv').config();
 
 
 //kết nối MongoDB
-
 database.connect();
 
 
@@ -28,7 +27,7 @@ app.use(methodOverride('_method'));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
-app.set("views", "./views");
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
 //flash
@@ -41,7 +40,7 @@ app.use(flash());
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
 //Nhúng file tĩnh
-app.use(express.static("public"));
+app.use(express.static(`${__dirname}/public`));
 
 //Routes
 route(app);
