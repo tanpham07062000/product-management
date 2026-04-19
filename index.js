@@ -1,60 +1,50 @@
+// 1. Import các thư viện
 const express = require("express");
-const app = express();
-var methodOverride = require('method-override');
+const path = require("path"); // Nên dùng path
+const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
-var flash = require('express-flash');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const database = require("./config/database");
-const route = require("./routes/client/index.route");
-const routeAdmin = require("./routes/admin/index.route");
-const systemConfig = require("./config/system");
-
-
-
+const flash = require('express-flash');
 require('dotenv').config();
 
-// tao thong bao
+// 2. Import các cấu hình nội bộ
+const database = require("./config/database");
+const systemConfig = require("./config/system");
+const route = require("./routes/client/index.route");
+const routeAdmin = require("./routes/admin/index.route");
 
+// 3. KHỞI TẠO APP (Dòng này phải nằm trên tất cả các dòng app.use)
+const app = express(); 
 
-//kết nối MongoDB
-database.connect()
-  .then(() => console.log("DB connected"))
-  .catch(err => console.log(err));
+// 4. Kết nối Database
+database.connect();
 
-
-
-
-const port = process.env.PORT || 3000;
-
+// 5. Cấu hình Middleware (Sau khi đã có 'app')
 app.use(methodOverride('_method'));
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded());
-app.set("views", `${__dirname}/views`);
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-//flash
 app.use(cookieParser('keyboardtan'));
 app.use(session({
-  secret: 'keyboardtan',  
+  secret: 'keyboardtan',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: { secure: false }
 }));
 app.use(flash());
 
-// App Locals Variables
-
+// Locals
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
-//Nhúng file tĩnh
-app.use(express.static(`${__dirname}/public`));
+// Static files
+app.use(express.static(path.join(__dirname, "public")));
 
-//Routes
+// 6. Routes (Truyền app vào sau khi đã config xong middleware)
 route(app);
 routeAdmin(app);
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`);
-// });
-app.set('trust proxy', 1);
+
+// 7. Export
 module.exports = app;
