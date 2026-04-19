@@ -17,7 +17,11 @@ require('dotenv').config();
 
 
 //kết nối MongoDB
-database.connect();
+app.use(async (req, res, next) => {
+   await database.connect();
+   next();
+});
+
 
 
 const app = express();

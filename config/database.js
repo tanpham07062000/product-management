@@ -1,11 +1,17 @@
 const mongoose = require("mongoose");
-module.exports.connect = async()=>{
-  try{
+
+let isConnected = false;
+
+module.exports.connect = async () => {
+  if (isConnected) return;
+
+  try {
     await mongoose.connect(process.env.MONGO_URL);
-    console.log("Connect Success!");
-  } catch(error)
-  {
-    console.log("Connect Error!");
+    isConnected = true;
+    console.log("✅ Connect Success!");
+  } catch (error) {
+    console.log("❌ Connect Error!");
     console.log(error.message);
+    throw error;
   }
-}
+};
