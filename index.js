@@ -1,4 +1,6 @@
 const express = require("express");
+const app = express();
+require('dotenv').config();
 var methodOverride = require('method-override');
 const bodyParser = require('body-parser');
 var flash = require('express-flash');
@@ -20,7 +22,7 @@ require('dotenv').config();
 database.connect();
 
 
-const app = express();
+
 const port = process.env.PORT;
 
 app.use(methodOverride('_method'));
