@@ -1,21 +1,11 @@
 const mongoose = require("mongoose");
-
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-
-async function connect() {
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(process.env.MONGO_URL)
-      .then((mongoose) => mongoose);
+module.exports.connect = async()=>{
+  try{
+    await mongoose.connect(process.env.MONGO_URL);
+    console.log("Connect Success!");
+  } catch(error)
+  {
+    console.log("Connect Error!");
+    console.log(error.message);
   }
-
-  cached.conn = await cached.promise;
-  return cached.conn;
 }
-
-module.exports = connect;
