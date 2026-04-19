@@ -18,8 +18,13 @@ require('dotenv').config();
 
 //kết nối MongoDB
 app.use(async (req, res, next) => {
-   await database.connect();
-   next();
+  try {
+    await database.connect();
+    next();
+  } catch (err) {
+    console.log(" DB ERROR:", err.message);
+    res.status(500).send("Database connection error");
+  }
 });
 
 
