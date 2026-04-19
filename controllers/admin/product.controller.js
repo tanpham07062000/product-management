@@ -152,10 +152,7 @@ module.exports.edit = async (req, res) => {
       deleted: false,
     };
     const product = await Product.findOne(find);
-    if (!product) {
-      req.flash("error", "Không tồn tại sản phẩm này!");
-      return res.redirect(`${systemConfig.prefixAdmin}/products`);
-    }
+    
     res.render("admin/pages/products/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
       product,
@@ -184,4 +181,23 @@ module.exports.editPatch = async (req, res) => {
     req.flash("error", "Cập nhật trạng thái sản phẩm thất bại!");
   }
   res.redirect(req.get("Referrer") || "/");
+};
+
+// [GET] /admin/products/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    let find = {
+      _id: req.params.id,
+      deleted: false,
+    };
+    const product = await Product.findOne(find);
+   
+    res.render("admin/pages/products/detail", {
+      pageTitle: product.title,
+      product,
+    });
+  } catch (error) {
+    req.flash("error", `Không tồn tại sản phẩm này!`);
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+  }
 };
