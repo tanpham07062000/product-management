@@ -1,7 +1,7 @@
 // [GET] /
 
 module.exports.index=(req, res) => {
-  res.render("client/page/home/index",{
+  res.render("client/pages/home/index",{
     pageTitle:"Home"
   });
 }

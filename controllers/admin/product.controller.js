@@ -194,7 +194,7 @@ module.exports.detail = async (req, res) => {
    
     res.render("admin/pages/products/detail", {
       pageTitle: product.title,
-      product,
+      product: product,
     });
   } catch (error) {
     req.flash("error", `Không tồn tại sản phẩm này!`);

@@ -14,8 +14,28 @@ module.exports.index = async (req, res) => {
     return item;
   });
 
-  res.render("client/page/products/index", {
+  res.render("client/pages/products/index", {
     pageTitle: "Products",
     products: newProducts,
   });
+};
+
+// [GET] /products/:slug
+module.exports.detail = async (req, res) => {
+  try {
+    let find = {
+      slug: req.params.slug,
+      deleted: false,
+      status: "active",
+    };
+    const product = await Product.findOne(find);
+    console.log(product);
+    res.render("client/pages/products/detail", {
+      pageTitle: product.title,
+      product: product,
+    });
+  } catch (error) {
+    req.flash("error", `Không tồn tại sản phẩm này!`);
+    res.redirect(`/products`);
+  }
 };
