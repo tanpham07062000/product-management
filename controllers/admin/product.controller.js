@@ -134,9 +134,54 @@ module.exports.createPost = async (req, res) => {
   } else {
     req.body.position = parseInt(req.body.position);
   }
-  req.body.thumbnail = `/uploads/${req.file.filename}`;
+  if (req.file) {
+    req.body.thumbnail = `/uploads/${req.file.filename}`;
+  }
+
   const product = new Product(req.body);
   await product.save();
 
   res.redirect(`${systemConfig.prefixAdmin}/products`);
+};
+
+// [GET] /admin/products/edit/:id
+module.exports.edit = async (req, res) => {
+  try {
+    let find = {
+      _id: req.params.id,
+      deleted: false,
+    };
+    const product = await Product.findOne(find);
+    if (!product) {
+      req.flash("error", "Không tồn tại sản phẩm này!");
+      return res.redirect(`${systemConfig.prefixAdmin}/products`);
+    }
+    res.render("admin/pages/products/edit", {
+      pageTitle: "Chỉnh sửa sản phẩm",
+      product,
+    });
+  } catch (error) {
+    req.flash("error", `Không tồn tại sản phẩm này!`);
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+  }
+};
+// [PATCH] /admin/products/edit/:id
+module.exports.editPatch = async (req, res) => {
+  const id =req.params.id;
+  req.body.price = parseInt(req.body.price);
+  req.body.discountPercentage = parseInt(req.body.discountPercentage);
+  req.body.stock = parseInt(req.body.stock);
+  req.body.position = parseInt(req.body.position);
+
+  if (req.file) {
+    req.body.thumbnail = `/uploads/${req.file.filename}`;
+  }
+
+  try {
+    await Product.updateOne({ _id: id }, req.body);
+    req.flash("success", "Cập nhật trạng thái sản phẩm thành công!");
+  } catch (error) {
+    req.flash("error", "Cập nhật trạng thái sản phẩm thất bại!");
+  }
+  res.redirect(req.get("Referrer") || "/");
 };
