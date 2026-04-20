@@ -33,9 +33,17 @@ module.exports.index = async (req, res) => {
   );
 
   // End Pagination
+  //Sort
+  let sort = {};
+  if (req.query.sortKey && req.query.sortValue) {
+    sort[req.query.sortKey] = req.query.sortValue;
+  } else {
+    sort.position = "desc";
+  }
 
+  //End Sort
   const products = await Product.find(find)
-    .sort({ position: "desc" })
+    .sort(sort)
     .limit(objectPagination.limitItem)
     .skip(objectPagination.skip);
 
@@ -152,7 +160,7 @@ module.exports.edit = async (req, res) => {
       deleted: false,
     };
     const product = await Product.findOne(find);
-    
+
     res.render("admin/pages/products/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
       product,
@@ -164,7 +172,7 @@ module.exports.edit = async (req, res) => {
 };
 // [PATCH] /admin/products/edit/:id
 module.exports.editPatch = async (req, res) => {
-  const id =req.params.id;
+  const id = req.params.id;
   req.body.price = parseInt(req.body.price);
   req.body.discountPercentage = parseInt(req.body.discountPercentage);
   req.body.stock = parseInt(req.body.stock);
@@ -191,7 +199,7 @@ module.exports.detail = async (req, res) => {
       deleted: false,
     };
     const product = await Product.findOne(find);
-   
+
     res.render("admin/pages/products/detail", {
       pageTitle: product.title,
       product: product,
