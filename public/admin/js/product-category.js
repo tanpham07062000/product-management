@@ -1,4 +1,3 @@
-
 // Change status
 const buttonChangeStatus = document.querySelectorAll("[button-change-status]");
 if (buttonChangeStatus.length > 0) {
@@ -22,6 +21,7 @@ if (buttonChangeStatus.length > 0) {
 
 // check box multi
 const checkboxMulti = document.querySelector("[checkbox-multi]");
+
 if (checkboxMulti) {
   const inputCheckAll = checkboxMulti.querySelector("input[name='checkall']");
   const inputsId = checkboxMulti.querySelectorAll("input[name='id']");
