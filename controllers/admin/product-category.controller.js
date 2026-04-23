@@ -141,7 +141,6 @@ module.exports.create = async (req, res) => {
     deleted: false,
   };
 
-
   const records = await ProductCategory.find(find);
   const newRecords = createTreeHelper.tree(records);
 
@@ -174,10 +173,12 @@ module.exports.edit = async (req, res) => {
       deleted: false,
     };
     const record = await ProductCategory.findOne(find);
-
+    const records = await ProductCategory.find({ deleted: false });
+    const newRecords = createTreeHelper.tree(records);
     res.render("admin/pages/products-category/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
       record: record,
+      records: newRecords,
     });
   } catch (error) {
     req.flash("error", `Không tồn tại sản phẩm này!`);
@@ -195,9 +196,9 @@ module.exports.editPatch = async (req, res) => {
 
   try {
     await ProductCategory.updateOne({ _id: id }, req.body);
-    req.flash("success", "Cập nhật trạng thái sản phẩm thành công!");
+    req.flash("success", "Cập nhật trạng thái danh mục thành công!");
   } catch (error) {
-    req.flash("error", "Cập nhật trạng thái sản phẩm thất bại!");
+    req.flash("error", "Cập nhật trạng thái danh mục thất bại!");
   }
   res.redirect(req.get("Referrer") || "/");
 };
