@@ -44,7 +44,7 @@ module.exports.edit = async (req, res) => {
     res.redirect(`${systemConfig.prefixAdmin}/roles`);
   }
 };
-// [PATCH] /admin/roles/:id
+// [PATCH] /admin/roles/edit/:id
 module.exports.editPatch = async (req, res) => {
   try {
     const id = req.params.id;
