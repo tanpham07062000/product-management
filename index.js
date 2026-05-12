@@ -14,6 +14,8 @@ const systemConfig = require("./config/system");
 
 require("dotenv").config();
 
+const moment=require("moment");
+
 // tao thong bao
 
 //kết nối MongoDB
@@ -36,6 +38,7 @@ app.use(flash());
 // App Locals Variables
 
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
+app.locals.moment=moment;
 
 //Nhúng file tĩnh
 app.use(express.static(`${__dirname}/public`));

@@ -1,5 +1,6 @@
 const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 
 const filterStatusHelper = require("../../helpers/filterStatus");
 const searchHelper = require("../../helpers/search");
@@ -49,7 +50,14 @@ module.exports.index = async (req, res) => {
     .sort(sort)
     .limit(objectPagination.limitItem)
     .skip(objectPagination.skip);
-
+  for(const product of products){
+    const user = await Account.findOne({
+      _id: product.createdBy.account_id
+    });
+    if(user){
+      product.accountFullName=user.fullName;
+    }
+  }
   // console.log(products);
   res.render("admin/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",
@@ -89,7 +97,10 @@ module.exports.changeMulti = async (req, res) => {
     case "delete-all":
       await Product.updateMany(
         { _id: { $in: ids } },
-        { deleted: true, deletedAt: new Date() },
+        { deleted: true, deletedBy:{
+        account_id:res.locals.user.id,
+        deletedAt: new Date(),
+      } },
       );
       req.flash("success", `Đã xóa ${ids.length} sản phẩm thành công!`);
       break;
@@ -121,7 +132,10 @@ module.exports.deleteItem = async (req, res) => {
     { _id: id },
     {
       deleted: true,
-      deletedAt: new Date(),
+      deletedBy:{
+        account_id:res.locals.user.id,
+        deletedAt: new Date(),
+      }
     },
   );
   req.flash("success", `Đã xóa sản phẩm thành công!`);
@@ -155,6 +169,10 @@ module.exports.createPost = async (req, res) => {
   // if (req.file) {
   //   req.body.thumbnail = `/uploads/${req.file.filename}`;
   // }
+  
+  req.body.createdBy = {
+    account_id: res.locals.user._id,
+  };
 
   const product = new Product(req.body);
   await product.save();
@@ -171,7 +189,7 @@ module.exports.edit = async (req, res) => {
     };
     const product = await Product.findOne(find);
 
-    const category = await ProductCategory.find({deleted: false});
+    const category = await ProductCategory.find({ deleted: false });
     const newCategory = createTreeHelper.tree(category);
     res.render("admin/pages/products/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",

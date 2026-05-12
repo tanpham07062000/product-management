@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema(
     title: String,
     product_category_id: {
       type: String,
-      default:""
+      default: "",
     },
     description: String,
     price: Number,
@@ -18,13 +18,23 @@ const productSchema = new mongoose.Schema(
     slug: {
       type: String,
       slug: "title",
-      unique: true
+      unique: true,
+    },
+    createdBy: {
+      account_id: String,
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
     deleted: {
       type: Boolean,
       default: false,
     },
-    deletedAt: Date,
+    deletedBy: {
+      account_id: String,
+      deletedAt: Date,
+    },
   },
   { timestamps: true },
 );
