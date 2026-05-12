@@ -55,6 +55,26 @@ module.exports.editPatch = async (req, res) => {
     req.flash("error", " Cập nhật nhóm quyền thất bại!");
   }
 };
+
+// [GET] /admin/roles/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let find = {
+      _id: id,
+      deleted: false,
+    };
+
+    const record = await Role.findOne(find);
+
+    res.render("admin/pages/roles/detail", {
+      pageTitle: "Sửa nhóm quyền",
+      record: record,
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/roles`);
+  }
+};
 // [GET] /admin/roles/permissions
 module.exports.permissions = async (req, res) => {
   let find = {

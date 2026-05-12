@@ -95,3 +95,26 @@ module.exports.editPatch = async (req, res) => {
   }
   res.redirect(req.get("Referrer") || "/");
 };
+
+// [GET] /admin/accounts/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let find = {
+      _id: id,
+      deleted: false,
+    };
+
+    const record = await Account.findOne(find);
+    const roles = await Role.find({
+      deleted: false,
+    });
+    res.render("admin/pages/accounts/detail", {
+      pageTitle: "Chỉnh sửa tài khoản",
+      record: record,
+      roles: roles,
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  }
+};
