@@ -55,15 +55,15 @@ block main
       )
         label(for="avatar") Avatar 
         br
-        input(
-          type="file"
-          class="form-control-file"
-          id="avatar"
-          name="avatar"
-          accept="image/*"
-          upload-image-input
-          readonly
-        )
+        //- input(
+        //-   type="file"
+        //-   class="form-control-file"
+        //-   id="avatar"
+        //-   name="avatar"
+        //-   accept="image/*"
+        //-   upload-image-input
+        //-   readonly
+        //- )
         img(
           src=record.avatar
           class="image-preview"
@@ -105,10 +105,10 @@ block main
         )
         label(for="statusInactive" class="form-check-label") Dừng hoạt động
       div(class="form-group")
-        button(
-          type="submit"
-          class="btn btn-primary"
-        ) Cập nhật
+        a(
+          href=`${prefixAdmin}/accounts/edit/${record._id}`
+          class="btn btn-warning"
+        ) Chỉnh sửa
   else 
     p Vui lòng tạo nhóm quyền trước khi cập nhật tài khoản
     p
