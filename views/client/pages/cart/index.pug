@@ -34,7 +34,7 @@ block main
                     img(src=item.productInfo.thumbnail, alt=item.productInfo.title width="80px")
 
                   td
-                    a(href=`/products/detail/:${item.productInfo.slug}`) #{item.productInfo.title}
+                    a(href=`/products/detail/${item.productInfo.slug}`) #{item.productInfo.title}
 
                   td #{item.productInfo.priceNew}$
 
@@ -52,7 +52,7 @@ block main
 
                   td
                     a(
-                      href=`/cart/delete/:${item.product_id}`
+                      href=`/cart/delete/${item.product_id}`
                       class="btn btn-danger"
                     ) Xóa
             else 
