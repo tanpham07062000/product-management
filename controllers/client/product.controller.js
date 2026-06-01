@@ -12,21 +12,30 @@ module.exports.index = async (req, res) => {
   const newProducts = productsHelper.newPriceProducts(products);
 
   res.render("client/pages/products/index", {
-    pageTitle: "Products",
+    pageTitle: "Danh sách sản phẩm",
     products: newProducts,
   });
 };
 
-// [GET] /products/:slug
+// [GET] /products/detail/:slugProduct
 module.exports.detail = async (req, res) => {
   try {
     let find = {
-      slug: req.params.slug,
+      slug: req.params.slugProduct,
       deleted: false,
       status: "active",
     };
     const product = await Product.findOne(find);
+    if(product.product_category_id){
+      const category= await ProductCategory.findOne({
+        _id:product.product_category_id,
+        status:"active",
+        deleted: false,
+      });
+      product.category=category;
+    }
 
+    product.priceNew = productsHelper.newPriceProduct(product);
     res.render("client/pages/products/detail", {
       pageTitle: product.title,
       product: product,
